@@ -1,3 +1,4 @@
+// app/page.tsx
 "use client";
 
 import { useMiniKit, useAddFrame } from "@coinbase/onchainkit/minikit";
@@ -29,8 +30,23 @@ interface Tile {
   fallDuration: number;
 }
 
+export const metadata = {
+  title: "🎵 Tap Game",
+  description: "Test your rhythm on Farcaster!",
+  openGraph: {
+    title: "🎵 Tap Game",
+    description: "Test your rhythm and tap to the beat!",
+    images: ["https://your-app.vercel.app/og.png"],
+  },
+  other: {
+    "fc:frame": "vNext",
+    "fc:frame:image": "https://your-app.vercel.app/og.png",
+    "fc:frame:button:1": "▶️ Play",
+    "fc:frame:post_url": "https://your-app.vercel.app/api/frame",
+  },
+};
+
 export default function Home() {
-  // Game state
   const [tiles, setTiles] = useState<Tile[]>([]);
   const [nextTileId, setNextTileId] = useState(0);
   const [gameOver, setGameOver] = useState(false);
@@ -39,25 +55,20 @@ export default function Home() {
   const [hasStartedOnce, setHasStartedOnce] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  // Wallet & identity
   const { address: walletAddress } = useAccount();
-
   const { setFrameReady, isFrameReady, context } = useMiniKit();
   const addFrame = useAddFrame();
 
-  // Leaderboard
   const [leaderboard, setLeaderboard] = useState<
     { wallet_address: string; score: number }[]
   >([]);
 
-  // Game parameters
   const TILE_INTERVAL = 1000;
   const LANES = [0, 1, 2, 3];
   const MIN_SPEED = 3000;
   const MAX_SPEED = 1200;
   const PHASES = 4;
 
-  // Speed calculation
   const getCurrentFallSpeed = () => {
     const audio = audioRef.current;
     if (!audio || !audio.duration) return MIN_SPEED;
@@ -69,7 +80,6 @@ export default function Home() {
     );
   };
 
-  // Spawn tiles
   useEffect(() => {
     if (!gameStarted || gameOver) return;
     const interval = setInterval(() => {
@@ -85,7 +95,6 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [gameStarted, gameOver, nextTileId]);
 
-  // Audio play/pause
   useEffect(() => {
     if (gameStarted && !gameOver) {
       audioRef.current?.play().catch(() => {});
@@ -98,7 +107,6 @@ export default function Home() {
     }
   }, [gameOver]);
 
-  // Supabase leaderboard fetch
   useEffect(() => {
     const fetchLeaderboard = async () => {
       const { data } = await supabase
@@ -111,12 +119,10 @@ export default function Home() {
     fetchLeaderboard();
   }, [gameOver]);
 
-  // OnchainKit frame
   useEffect(() => {
     if (!isFrameReady) setFrameReady();
   }, [isFrameReady, setFrameReady]);
 
-  // Click handlers
   const handleTileClick = (id: number) => {
     if (tiles[0]?.id === id) {
       setScore((s) => s + 1);
@@ -132,7 +138,6 @@ export default function Home() {
     }
   };
 
-  // Game state controls
   const startGame = () => {
     setTiles([]);
     setNextTileId(0);
@@ -171,12 +176,11 @@ export default function Home() {
     const audio = audioRef.current;
     if (audio) {
       audio.pause();
-      audio.currentTime = 0; // 🔥 Reset to start
+      audio.currentTime = 0;
       audio.play().catch(() => {});
     }
   };
 
-  // Save Frame button
   const saveFrameBtn = useMemo(() => {
     if (context && !context.client?.added) {
       return (
@@ -214,7 +218,6 @@ export default function Home() {
 
       <main className="flex flex-col items-center gap-4 pt-16">
         <h1 className="text-2xl font-bold">🎵 Tap Game</h1>
-
         {!hasStartedOnce ? (
           <button onClick={startGame} className="bg-blue-500 px-4 py-2 rounded">
             ▶️ Start Game
@@ -246,12 +249,10 @@ export default function Home() {
                 </div>
               )}
             </div>
-
             <p className="text-lg">Score: {score}</p>
           </>
         )}
 
-        {/* Leaderboard */}
         <div className="mt-8 w-full max-w-xs bg-white/10 rounded p-4 text-center">
           <h2 className="font-semibold mb-2">🏆 Leaderboard</h2>
           <ol className="list-decimal list-inside space-y-1">
