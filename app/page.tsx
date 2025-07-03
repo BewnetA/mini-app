@@ -17,7 +17,6 @@ import {
 import { useAccount } from "wagmi";
 import { useEffect, useRef, useState, useMemo } from "react";
 import { createClient } from "@supabase/supabase-js";
-import Image from "next/image";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
