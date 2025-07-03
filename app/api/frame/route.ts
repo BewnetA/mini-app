@@ -10,9 +10,9 @@ export async function POST() {
       <title>Frame</title>
     </head>
     <body>
-      <img src="https://your-app.vercel.app/og.png" alt="Game Thumbnail" style="width:100%; max-width:400px;"/>
+      <img src="https://mini-8j8utakf3-bewnets-projects.vercel.app/og.png" alt="Game Thumbnail" style="width:100%; max-width:400px;"/>
       <div style="margin-top: 1em;">
-        <a href="https://your-app.vercel.app" style="display:inline-block; padding: 10px 20px; background:#0066ff; color:#fff; text-decoration:none; border-radius:5px;">
+        <a href="https://mini-8j8utakf3-bewnets-projects.vercel.app/" style="display:inline-block; padding: 10px 20px; background:#0066ff; color:#fff; text-decoration:none; border-radius:5px;">
           🚀 Start Game
         </a>
       </div>
